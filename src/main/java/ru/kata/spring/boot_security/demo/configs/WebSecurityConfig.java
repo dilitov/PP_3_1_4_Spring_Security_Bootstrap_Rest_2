@@ -35,7 +35,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/auth/login")
-                .loginProcessingUrl("/auth/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .successHandler(successUserHandler)
@@ -43,10 +42,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutSuccessUrl("/auth/login")
+                .deleteCookies("JSESSIONID")
                 .permitAll();
     }
 
-    // аутентификация inMemory
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {

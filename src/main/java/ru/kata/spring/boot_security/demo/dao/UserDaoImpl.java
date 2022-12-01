@@ -2,11 +2,13 @@ package ru.kata.spring.boot_security.demo.dao;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -23,10 +25,20 @@ public class UserDaoImpl implements UserDao {
 
 
     @Override
-    public void addUser(User user, String[] role) {
-        user.setRoles(rolesDao.getRoles(role));
+    public void addUser(User user) {
         user.setPassword(encoder.encode(user.getPassword()));
         entityManager.persist(user);
+    }
+
+    @Override
+    public boolean updateUser(User user) {
+        if (getUserById(user.getId()) != null) {
+            user.setPassword(encoder.encode(user.getPassword()));
+            entityManager.merge(user);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -46,15 +58,14 @@ public class UserDaoImpl implements UserDao {
         return entityManager.find(User.class, id);
     }
 
-    @Override
-    public void updateUser(User user, String[] roles) {
-        user.setRoles(rolesDao.getRoles(roles));
-        user.setPassword(encoder.encode(user.getPassword()));
-        entityManager.merge(user);
-    }
+
 
     @Override
-    public void deleteUser(int id) {
-        entityManager.remove(getUserById(id));
+    public boolean deleteUser(int id) {
+        if (getUserById(id) != null) {
+            entityManager.remove(getUserById(id));
+            return true;
+        }
+        return false;
     }
 }

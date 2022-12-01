@@ -1,13 +1,11 @@
 package ru.kata.spring.boot_security.demo.model;
 
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -32,9 +30,9 @@ public class User implements UserDetails {
     private String password;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "authorities",
-    joinColumns = @JoinColumn(name = "users_id"),
-    inverseJoinColumns = @JoinColumn(name = "roles_id"))
-    private Set<Role> roles;
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id"))
+    private List<Role> roles;
 
     public User() {
     }
@@ -44,8 +42,7 @@ public class User implements UserDetails {
                 int age,
                 boolean isActive,
                 String userName,
-                String password,
-                Set<Role> roles) {
+                String password) {
         this.id = id;
         this.name = name;
         this.surName = surName;
@@ -53,7 +50,6 @@ public class User implements UserDetails {
         this.isActive = isActive;
         this.userName = userName;
         this.password = password;
-        this.roles = roles;
     }
 
     public Integer getId() {
@@ -105,11 +101,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
@@ -127,7 +123,7 @@ public class User implements UserDetails {
     public boolean isUser() {
         return roles.stream()
                 .map(Role::getRole)
-                .anyMatch(role -> (role.equals("USER") || role.equals("ADMIN")));
+                .anyMatch(role -> role.equals("USER"));
     }
 
 

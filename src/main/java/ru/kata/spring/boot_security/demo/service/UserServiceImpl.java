@@ -20,8 +20,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public void addUser(User user, String[] role) {
-        userDao.addUser(user, role);
+    public void addUser(User user) {
+        userDao.addUser(user);
     }
 
     @Override
@@ -38,14 +38,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public void updateUser(User user, String[] role) {
-        userDao.updateUser(user, role);
+    public boolean updateUser(User user) {
+        return userDao.updateUser(user);
     }
 
     @Override
     @Transactional
-    public void deleteUser(int id) {
-        userDao.deleteUser(id);
+    public boolean deleteUser(int id) {
+        return userDao.deleteUser(id);
     }
 
     @Override
